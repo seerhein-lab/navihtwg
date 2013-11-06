@@ -7,8 +7,8 @@ import java.util.Locale;
 public class DatePicker {
 	
 	private Date date = new Date();
-	// Set the DateFormat e.g. (2013.10.29)
-	private String dateFormat = "yyyy.MM.dd";
+	// Set the DateFormat e.g. (2013-10-29)
+	private String dateFormat = "yyyy-MM-dd";
 	private SimpleDateFormat getDate = new SimpleDateFormat(dateFormat,
 			Locale.GERMANY);
 	private String getTime = SimpleDateFormat.getTimeInstance(
@@ -16,7 +16,7 @@ public class DatePicker {
 
 	/**
 	 * 
-	 * @return the actual Date (yyyy.MM.dd).
+	 * @return the actual Date (yyyy-MM-dd).
 	 */
 	public String getDate() {
 		return getDate.format(date);

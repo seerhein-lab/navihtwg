@@ -31,8 +31,7 @@ public abstract class MeasuringPoint {
 
 		
 	public void saveTofile() {
-		Log.d("Guten TAG", file.getAbsolutePath());
-		//file.mkdirs();
+//		file.mkdirs();
 		BufferedWriter writer = null;
 		if (!file.exists()) {
 			try {
@@ -89,8 +88,14 @@ public abstract class MeasuringPoint {
 	}
 
 
-	public DatePicker getDate() {
-		return date;
+	public String getDate() {
+		date = new DatePicker();
+		return date.getDate();
+	}
+	
+	public String getTime() {
+		date = new DatePicker();
+		return date.getTime();
 	}
 	
 
