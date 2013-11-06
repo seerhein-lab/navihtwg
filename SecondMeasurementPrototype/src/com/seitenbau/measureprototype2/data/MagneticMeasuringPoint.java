@@ -8,7 +8,7 @@ import com.seitenbau.measureprototype2.util.MeasuringPosition;
 
 public class MagneticMeasuringPoint extends MeasuringPoint {
 
-	private String headline = "x;y;z" + Constants.NEWLINE;
+	private String headline = "x;y;z;Magnetfeldstärke" + Constants.NEWLINE;
 	private float x;
 	private float y;
 	private float z;
@@ -37,15 +37,24 @@ public class MagneticMeasuringPoint extends MeasuringPoint {
 
 	@Override
 	public String getWritableData() {
-		String writableData = getX() + Constants.SEPERATOR + getY()
-				+ Constants.SEPERATOR + getZ() + Constants.NEWLINE;
-
+		String writableData = Float.toString(getX()) + Constants.SEPERATOR
+				+ Float.toString(getY()) + Constants.SEPERATOR
+				+ Float.toString(getZ()) + Constants.SEPERATOR
+				+ Double.toString(getAbsoluteStrength()) + Constants.NEWLINE;
+		writableData = writableData.replace(".", ",");
 		return writableData;
 	}
 
 	@Override
 	public String getHeadline() {
 		return headline;
+	}
+
+	public double getAbsoluteStrength() {
+		double magneticFieldStrength;
+		magneticFieldStrength = Math.sqrt(getX() * getX() + getY() * getY()
+				+ getZ() * getZ());
+		return magneticFieldStrength;
 	}
 
 }
