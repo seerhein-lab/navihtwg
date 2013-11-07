@@ -35,6 +35,11 @@ public abstract class MeasuringPoint {
 		BufferedWriter writer = null;
 		if (!file.exists()) {
 			try {
+				//create subdirectories if necessary
+				File parent = file.getParentFile();
+				if(!parent.exists() && !parent.mkdirs()){
+				    throw new IllegalStateException("Couldn't create dir: " + parent);
+				}
 				file.createNewFile();
 				writer = new BufferedWriter(new FileWriter(file));
 				writer.write(getHeadline());
@@ -62,7 +67,7 @@ public abstract class MeasuringPoint {
 //				fw.close();
 			} catch (IOException e) {
 				Log.e(Constants.TAG_WIFI,
-						"Fehler beim einfügen in vorhandene Datei");
+						"Fehler beim einfï¿½gen in vorhandene Datei");
 			} finally {
 			try {
 				writer.close();
