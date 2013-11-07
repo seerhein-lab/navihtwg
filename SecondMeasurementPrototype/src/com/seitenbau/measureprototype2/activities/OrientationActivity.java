@@ -73,7 +73,7 @@ public class OrientationActivity extends Activity {
 						
 						sensorCollector = new OurSensorCollector(
 								getApplicationContext(), 
-								new File(Constants.ABSOLUTE_PATH + "/M" + loc.getID() + "/"),
+								new File(Constants.ABSOLUTE_PATH + "/"),
 								point[dummy],
 								loc);
 						

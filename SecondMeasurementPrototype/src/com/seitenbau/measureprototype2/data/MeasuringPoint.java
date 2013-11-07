@@ -27,6 +27,7 @@ public abstract class MeasuringPoint {
 		this.file = file;
 		this.date = date;
 		
+
 	}
 
 		

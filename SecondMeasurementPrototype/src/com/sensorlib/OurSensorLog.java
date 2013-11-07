@@ -73,7 +73,10 @@ public class OurSensorLog extends BaseSensorLog {
 	// testing.
 	private static long overrideTimestamp = -1L; // means unused.
 
-	// The Path we're writing.
+	// The Path we're writing location independent data.
+	private final File basePath;
+	
+	// The Path we're writing. (including the location)
 	private final File path;
 
 	// Location
@@ -119,10 +122,11 @@ public class OurSensorLog extends BaseSensorLog {
 	// this.path = path;
 	// path.mkdirs();
 
-	public OurSensorLog(Context ctx, File path, String orientation,
+	public OurSensorLog(Context ctx, File basePath, String orientation,
 			MeasuringPosition loc) {
 		this.ctx = ctx;
-		this.path = path;
+		this.basePath = basePath;
+		this.path = new File(basePath,"M" + loc.getID() + "/");
 		this.orientation = orientation;
 		this.location = loc;
 
@@ -194,7 +198,12 @@ public class OurSensorLog extends BaseSensorLog {
 		measuringPoints.add(data);
 		data.saveTofile();
 		
-		
+		// save the files in the base directory as well (all the location in the same file)
+		File baseFile = new File(basePath,"/network_position"
+				+ Constants.EXTENSION);
+		MeasuringPoint sameData = new LocationMeasuringPoint(location,
+				orientation, baseFile, datePicker, latitude, longitude, altitude,accuracy);
+		sameData.saveTofile();
 	}
 
 	@Override
@@ -252,11 +261,11 @@ public class OurSensorLog extends BaseSensorLog {
 			File file = new File(path.getAbsolutePath() + "/"
 					+ getSensorNameForFile(Sensor.TYPE_MAGNETIC_FIELD)
 					+ Constants.EXTENSION);
-
 			MeasuringPoint data = new MagneticMeasuringPoint(location,
 					orientation, file, datePicker, x, y, z);
 			measuringPoints.add(data);
-			data.saveTofile();
+			data.saveTofile();			
+			
 		}
 
 		// final int vCount = event.values.length;
