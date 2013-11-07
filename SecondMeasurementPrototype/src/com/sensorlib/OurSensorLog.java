@@ -34,6 +34,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import com.seitenbau.measureprototype2.data.LocationMeasuringPoint;
 import com.seitenbau.measureprototype2.data.MagneticMeasuringPoint;
 import com.seitenbau.measureprototype2.data.MeasuringPoint;
 import com.seitenbau.measureprototype2.util.Constants;
@@ -178,6 +179,22 @@ public class OurSensorLog extends BaseSensorLog {
 	@Override
 	protected void logNetworkPosition(long absoluteTimeNanos, Location loc) {
 		// writeLocationLine(absoluteTimeNanos, "latLngE7Network", loc);
+		
+		DatePicker datePicker = new DatePicker();
+
+		double latitude = loc.getLatitude();
+		double longitude = loc.getLongitude();
+		double altitude = loc.getAltitude();
+		float accuracy = loc.getAccuracy();
+		File file = new File(path.getAbsolutePath() + "/network_position"
+				+ Constants.EXTENSION);
+
+		MeasuringPoint data = new LocationMeasuringPoint(location,
+				orientation, file, datePicker, latitude, longitude, altitude,accuracy);
+		measuringPoints.add(data);
+		data.saveTofile();
+		
+		
 	}
 
 	@Override

@@ -260,8 +260,8 @@ public class OurSensorCollector implements SensorEventListener, Closeable,
 		}
 
 		// Request Location updates from the GPS and cell towers
-//		locationManager.requestLocationUpdates(
-//				LocationManager.NETWORK_PROVIDER, 1000L, 0f, this);
+		locationManager.requestLocationUpdates(
+				LocationManager.NETWORK_PROVIDER, 500L, 0f, this);
 		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
 				1000L, 0f, this);
 		locationManager.addNmeaListener(this);
