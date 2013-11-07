@@ -179,7 +179,7 @@ public class OurSensorLog extends BaseSensorLog {
 	protected void logGpsPosition(long absoluteTimeNanos, Location loc) {
 		// writeLocationLine(absoluteTimeNanos, "latLngE7Gps", loc);
 	}
-
+	
 	@Override
 	protected void logNetworkPosition(long absoluteTimeNanos, Location loc) {
 		// writeLocationLine(absoluteTimeNanos, "latLngE7Network", loc);
