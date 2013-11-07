@@ -21,7 +21,6 @@ import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,7 +30,6 @@ import com.seitenbau.measureprototype2.util.Constants;
 import com.seitenbau.measureprototype2.util.DatePicker;
 import com.seitenbau.measureprototype2.util.MeasuringPosition;
 import com.sensorlib.OurSensorCollector;
-import com.sensorlib.SensorCollector;
 
 public class OrientationActivity extends Activity {
 
@@ -50,8 +48,6 @@ public class OrientationActivity extends Activity {
 		TextView textView = (TextView) findViewById(R.id.headLineOrientation);
 		textView.setText(loc.getID() + " - " + loc.getFloor() + " - "
 				+ loc.getDesc());
-		// Toast.makeText(getApplicationContext(), "Loc "+ loc.getDesc(),
-		// Toast.LENGTH_SHORT).show();
 		addPoints(loc);
 	}
 

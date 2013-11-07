@@ -1,6 +1,5 @@
 package com.seitenbau.measureprototype2.util;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 

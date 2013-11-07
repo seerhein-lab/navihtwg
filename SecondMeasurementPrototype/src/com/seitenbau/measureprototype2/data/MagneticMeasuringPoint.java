@@ -8,6 +8,11 @@ import com.seitenbau.measureprototype2.util.MeasuringPosition;
 
 public class MagneticMeasuringPoint extends MeasuringPoint {
 
+	private String headline = "location" + Constants.SEPERATOR + "orientation"
+			+ Constants.SEPERATOR + "date" + Constants.SEPERATOR + "time"
+			+ Constants.SEPERATOR + "x" + Constants.SEPERATOR + "y"
+			+ Constants.SEPERATOR + "z" + Constants.SEPERATOR
+			+ "magnetic field strength" + Constants.NEWLINE;
 	private float x;
 	private float y;
 	private float z;
@@ -41,8 +46,7 @@ public class MagneticMeasuringPoint extends MeasuringPoint {
 
 	@Override
 	public String getHeadline() {
-		return "location;orientation;date;time;x;y;z;magnetic field strength"
-				+ Constants.NEWLINE;
+		return headline;
 	}
 
 	public double getAbsoluteStrength() {

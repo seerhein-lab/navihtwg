@@ -8,18 +8,23 @@ import com.seitenbau.measureprototype2.util.MeasuringPosition;
 
 public class LocationMeasuringPoint extends MeasuringPoint {
 
-
+	private String headline = "location" + Constants.SEPERATOR + "orientation"
+			+ Constants.SEPERATOR + "date" + Constants.SEPERATOR + "time"
+			+ Constants.SEPERATOR + "latitude" + Constants.SEPERATOR
+			+ "longitude" + Constants.SEPERATOR + "altitude"
+			+ Constants.SEPERATOR + "accuracy" + Constants.NEWLINE;
+	
 	private double latitude;
 	private double longitude;
 	private double altitude;
 	private float accuracy;
-	
+
 	private String orientation;
 	private MeasuringPosition location;
 
 	public LocationMeasuringPoint(MeasuringPosition location,
-			String orientation, File file, DatePicker date, double latitude, double longitude,double altitude,
-			float accuracy) {
+			String orientation, File file, DatePicker date, double latitude,
+			double longitude, double altitude, float accuracy) {
 		super(location, orientation, file, date);
 		this.latitude = latitude;
 		this.longitude = longitude;
@@ -45,8 +50,7 @@ public class LocationMeasuringPoint extends MeasuringPoint {
 
 	@Override
 	public String getHeadline() {
-		return "location;orientation;date;time;latitude;longitude;altitude;accuracy"
-				+ Constants.NEWLINE;
+		return headline;
 	}
 
 	public double getLatitude() {
@@ -64,7 +68,5 @@ public class LocationMeasuringPoint extends MeasuringPoint {
 	public float getAccuracy() {
 		return accuracy;
 	}
-
-	
 
 }
