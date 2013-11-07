@@ -15,6 +15,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.seitenbau.measureprototype2.util.DummyMeasuringPositionProvider;
 import com.seitenbau.measureprototype2.util.JSONutil;
 import com.seitenbau.measureprototype2.util.MeasuringPosition;
 
@@ -30,6 +31,12 @@ public class MainActivity extends Activity {
 		JSONutil jsonUtil = new JSONutil();
 //		File file = new File(JSONFILE);
 		Map<Integer, MeasuringPosition> locationMap = jsonUtil.jsonToLocation(JSONFILE);
+		
+		//if the file is not present or it does not contain any location, loads test location from dummy provder
+		if (locationMap.size()==0){
+			locationMap=DummyMeasuringPositionProvider.getLocationMap();
+		}
+		
 		addLocationButtons(locationMap);
 	}
 
