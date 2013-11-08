@@ -37,6 +37,7 @@ import java.util.Set;
 import com.seitenbau.measureprototype2.data.LocationMeasuringPoint;
 import com.seitenbau.measureprototype2.data.MagneticMeasuringPoint;
 import com.seitenbau.measureprototype2.data.MeasuringPoint;
+import com.seitenbau.measureprototype2.data.WifiMeasuringPoint;
 import com.seitenbau.measureprototype2.util.Constants;
 import com.seitenbau.measureprototype2.util.DatePicker;
 import com.seitenbau.measureprototype2.util.MeasuringPosition;
@@ -75,7 +76,7 @@ public class OurSensorLog extends BaseSensorLog {
 
 	// The Path we're writing location independent data.
 	private final File basePath;
-	
+
 	// The Path we're writing. (including the location)
 	private final File path;
 
@@ -126,7 +127,7 @@ public class OurSensorLog extends BaseSensorLog {
 			MeasuringPosition loc) {
 		this.ctx = ctx;
 		this.basePath = basePath;
-		this.path = new File(basePath,"M" + loc.getID() + "/");
+		this.path = new File(basePath, "M" + loc.getID() + "/");
 		this.orientation = orientation;
 		this.location = loc;
 
@@ -179,11 +180,11 @@ public class OurSensorLog extends BaseSensorLog {
 	protected void logGpsPosition(long absoluteTimeNanos, Location loc) {
 		// writeLocationLine(absoluteTimeNanos, "latLngE7Gps", loc);
 	}
-	
+
 	@Override
 	protected void logNetworkPosition(long absoluteTimeNanos, Location loc) {
 		// writeLocationLine(absoluteTimeNanos, "latLngE7Network", loc);
-		
+
 		DatePicker datePicker = new DatePicker();
 
 		double latitude = loc.getLatitude();
@@ -193,16 +194,18 @@ public class OurSensorLog extends BaseSensorLog {
 		File file = new File(path.getAbsolutePath() + "/network_position"
 				+ Constants.EXTENSION);
 
-		MeasuringPoint data = new LocationMeasuringPoint(location,
-				orientation, file, datePicker, latitude, longitude, altitude,accuracy);
+		MeasuringPoint data = new LocationMeasuringPoint(location, orientation,
+				file, datePicker, latitude, longitude, altitude, accuracy);
 		measuringPoints.add(data);
 		data.saveTofile();
-		
-		// save the files in the base directory as well (all the location in the same file)
-		File baseFile = new File(basePath,"/network_position"
+
+		// save the files in the base directory as well (all the location in the
+		// same file)
+		File baseFile = new File(basePath, "/network_position"
 				+ Constants.EXTENSION);
 		MeasuringPoint sameData = new LocationMeasuringPoint(location,
-				orientation, baseFile, datePicker, latitude, longitude, altitude,accuracy);
+				orientation, baseFile, datePicker, latitude, longitude,
+				altitude, accuracy);
 		sameData.saveTofile();
 	}
 
@@ -264,8 +267,8 @@ public class OurSensorLog extends BaseSensorLog {
 			MeasuringPoint data = new MagneticMeasuringPoint(location,
 					orientation, file, datePicker, x, y, z);
 			measuringPoints.add(data);
-			data.saveTofile();			
-			
+			data.saveTofile();
+
 		}
 
 		// final int vCount = event.values.length;
@@ -292,14 +295,22 @@ public class OurSensorLog extends BaseSensorLog {
 	@Override
 	protected void logWifiScan(long absoluteTimeNanos,
 			Iterable<ScanResult> scans) {
-		StringBuffer dataString = new StringBuffer();
 		for (ScanResult sr : scans) {
-			// NOTE: We have set the SSID to be a constant in the below.
-			// This is to maintain backwards compatibility with existing formats
-
 			if (shouldLog(sr)) {
-				dataString.append(sr.BSSID + "," + UNKNOWN_SSID + ","
-						+ sr.level + " ");
+				DatePicker datePicker = new DatePicker();
+				
+				String SSID = sr.SSID;
+				String BSSID = sr.BSSID;
+				int frequency = sr.frequency;
+				int level = sr.level;
+
+				File file = new File(path.getAbsolutePath() + "/"
+						+ Constants.WIFIFILE + Constants.EXTENSION);
+				MeasuringPoint data = new WifiMeasuringPoint(location,
+						orientation, file, datePicker, SSID, BSSID, frequency,
+						level);
+				measuringPoints.add(data);
+				data.saveTofile();
 			}
 		}
 

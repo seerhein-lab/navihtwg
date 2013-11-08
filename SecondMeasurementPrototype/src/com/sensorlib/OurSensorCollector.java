@@ -255,7 +255,7 @@ public class OurSensorCollector implements SensorEventListener, Closeable,
 			} else {
 				sensorManager.registerListener(this, s,
 						SensorManager.SENSOR_DELAY_FASTEST);
-						Log.e(TAG, s.getName());
+						Log.d(TAG, s.getName());
 			}
 		}
 

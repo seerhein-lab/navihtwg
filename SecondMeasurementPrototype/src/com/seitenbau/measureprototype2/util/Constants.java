@@ -14,6 +14,8 @@ public class Constants {
 	
 	public static final String EXTENSION = ".csv";
 	
+	public static final String WIFIFILE = "wifi_scan";
+	
 	// TAG for the MainActivity
 	public static final String TAG_MAIN = "MainActivity";
 	

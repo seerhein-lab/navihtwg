@@ -8,19 +8,17 @@ import com.seitenbau.measureprototype2.util.MeasuringPosition;
 
 public class LocationMeasuringPoint extends MeasuringPoint {
 
-	private String headline = "location" + Constants.SEPERATOR + "orientation"
-			+ Constants.SEPERATOR + "date" + Constants.SEPERATOR + "time"
-			+ Constants.SEPERATOR + "latitude" + Constants.SEPERATOR
-			+ "longitude" + Constants.SEPERATOR + "altitude"
-			+ Constants.SEPERATOR + "accuracy" + Constants.NEWLINE;
-	
+	private final String HEADLINE = "location" + Constants.SEPERATOR
+			+ "orientation" + Constants.SEPERATOR + "date"
+			+ Constants.SEPERATOR + "time" + Constants.SEPERATOR + "latitude"
+			+ Constants.SEPERATOR + "longitude" + Constants.SEPERATOR
+			+ "altitude" + Constants.SEPERATOR + "accuracy" + Constants.NEWLINE;
+
 	private double latitude;
 	private double longitude;
 	private double altitude;
 	private float accuracy;
-
-	private String orientation;
-	private MeasuringPosition location;
+	private String linkToMaps = "https://maps.google.de/maps?q=";
 
 	public LocationMeasuringPoint(MeasuringPosition location,
 			String orientation, File file, DatePicker date, double latitude,
@@ -30,27 +28,31 @@ public class LocationMeasuringPoint extends MeasuringPoint {
 		this.longitude = longitude;
 		this.altitude = altitude;
 		this.accuracy = accuracy;
-		this.orientation = orientation;
-		this.location = location;
 
 	}
 
 	@Override
 	public String getWritableData() {
-		String writableData = location.getDesc() + Constants.SEPERATOR
-				+ orientation + Constants.SEPERATOR + getDate()
+		String writableData = getLocation().getID() + Constants.SEPERATOR
+				+ getOrientation() + Constants.SEPERATOR + getDate()
 				+ Constants.SEPERATOR + getTime() + Constants.SEPERATOR
 				+ Double.toString(getLatitude()) + Constants.SEPERATOR
 				+ Double.toString(getLongitude()) + Constants.SEPERATOR
 				+ Double.toString(getAltitude()) + Constants.SEPERATOR
-				+ Float.toString(getAccuracy()) + Constants.NEWLINE;
+				+ Float.toString(getAccuracy()) + Constants.SEPERATOR;
+		
+		
 		writableData = writableData.replace(".", ",");
+		writableData += linkToMaps + Double.toString(getLatitude()) +"," 
+			+ Double.toString(getLongitude())
+			+ Constants.NEWLINE;
+		
 		return writableData;
 	}
 
 	@Override
 	public String getHeadline() {
-		return headline;
+		return HEADLINE;
 	}
 
 	public double getLatitude() {

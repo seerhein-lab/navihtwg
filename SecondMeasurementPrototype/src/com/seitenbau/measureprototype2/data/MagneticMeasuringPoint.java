@@ -8,7 +8,7 @@ import com.seitenbau.measureprototype2.util.MeasuringPosition;
 
 public class MagneticMeasuringPoint extends MeasuringPoint {
 
-	private String headline = "location" + Constants.SEPERATOR + "orientation"
+	private final String HEADLINE = "location" + Constants.SEPERATOR + "orientation"
 			+ Constants.SEPERATOR + "date" + Constants.SEPERATOR + "time"
 			+ Constants.SEPERATOR + "x" + Constants.SEPERATOR + "y"
 			+ Constants.SEPERATOR + "z" + Constants.SEPERATOR
@@ -16,8 +16,6 @@ public class MagneticMeasuringPoint extends MeasuringPoint {
 	private float x;
 	private float y;
 	private float z;
-	private String orientation;
-	private MeasuringPosition location;
 
 	public MagneticMeasuringPoint(MeasuringPosition location,
 			String orientation, File file, DatePicker date, float x, float y,
@@ -26,15 +24,13 @@ public class MagneticMeasuringPoint extends MeasuringPoint {
 		this.x = x;
 		this.y = y;
 		this.z = z;
-		this.orientation = orientation;
-		this.location = location;
 
 	}
 
 	@Override
 	public String getWritableData() {
-		String writableData = location.getDesc() + Constants.SEPERATOR
-				+ orientation + Constants.SEPERATOR + getDate()
+		String writableData = getLocation().getID() + Constants.SEPERATOR
+				+ getOrientation() + Constants.SEPERATOR + getDate()
 				+ Constants.SEPERATOR + getTime() + Constants.SEPERATOR
 				+ Float.toString(getX()) + Constants.SEPERATOR
 				+ Float.toString(getY()) + Constants.SEPERATOR
@@ -46,7 +42,7 @@ public class MagneticMeasuringPoint extends MeasuringPoint {
 
 	@Override
 	public String getHeadline() {
-		return headline;
+		return HEADLINE;
 	}
 
 	public double getAbsoluteStrength() {
