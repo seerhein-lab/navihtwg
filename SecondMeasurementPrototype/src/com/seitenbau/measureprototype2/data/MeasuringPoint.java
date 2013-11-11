@@ -26,13 +26,10 @@ public abstract class MeasuringPoint {
 		this.orientation = orientation;
 		this.file = file;
 		this.date = date;
-		
-
 	}
 
 		
 	public void saveTofile() {
-//		file.mkdirs();
 		BufferedWriter writer = null;
 		if (!file.exists()) {
 			try {
@@ -62,13 +59,9 @@ public abstract class MeasuringPoint {
 				writer = new BufferedWriter(new FileWriter(file, true));
 				writer.write(getWritableData());
 				writer.flush();
-//				FileWriter fw = new FileWriter(file, true);
-//				fw.append(getWritableData());
-//				fw.flush();
-//				fw.close();
 			} catch (IOException e) {
 				Log.e(Constants.TAG_WIFI,
-						"Fehler beim einf�gen in vorhandene Datei");
+						"Fehler beim einfuegen in vorhandene Datei");
 			} finally {
 			try {
 				writer.close();

@@ -15,6 +15,13 @@ package com.sensorlib;
  */
 // Copyright 2011 Google Inc. All Rights Reserved.
 
+import java.io.File;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -23,17 +30,8 @@ import android.net.wifi.ScanResult;
 import android.telephony.NeighboringCellInfo;
 import android.util.Log;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-
+import com.seitenbau.measureprototype2.data.GravityMeasuringPoint;
+import com.seitenbau.measureprototype2.data.GyroscopeMeasuringPoint;
 import com.seitenbau.measureprototype2.data.LocationMeasuringPoint;
 import com.seitenbau.measureprototype2.data.MagneticMeasuringPoint;
 import com.seitenbau.measureprototype2.data.MeasuringPoint;
@@ -57,8 +55,8 @@ public class OurSensorLog extends BaseSensorLog {
 	// We've been asked not to log SSIDs, but this log file format asks for
 	// them.
 	// So we log "unknown" for the SSIDs of every access point we see.
-	private static final String UNKNOWN_SSID = "UNKNOWN";
-	private static final String LOG_FORMAT = "3 # nanosecond timing";
+	// private static final String UNKNOWN_SSID = "UNKNOWN";
+	// private static final String LOG_FORMAT = "3 # nanosecond timing";
 
 	// If we see this prefix on an AP, we don't log that MAC address. This
 	// implements our AP opt-out feature, announced here:
@@ -88,13 +86,11 @@ public class OurSensorLog extends BaseSensorLog {
 
 	private Context ctx;
 
-	private static final String TAG = "OurSensorLog";
-
 	// A stream that's writing to our text file.
 	// private PrintStream out;
 
 	// The current line count. Used to flush the stream every 100 lines.
-	private int lineCount;
+	// private int lineCount;
 
 	/**
 	 * Opens the given file for writing this sensor log.
@@ -253,10 +249,7 @@ public class OurSensorLog extends BaseSensorLog {
 	@Override
 	protected synchronized void logSensorEvent(long absoluteTimeNanos,
 			SensorEvent event) {
-		// writeTimestamp(absoluteTimeNanos);
-		// writeSensorId(getSensorName(event.sensor.getType()),
-		// event.sensor.getName();
-		Log.e(TAG, "magnetic field");
+		Log.e(Constants.TAG_OURSENSORLOG, "magnetic field");
 		if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
 			DatePicker datePicker = new DatePicker();
 
@@ -272,7 +265,7 @@ public class OurSensorLog extends BaseSensorLog {
 			data.saveTofile();
 
 		}
-		
+
 		if (event.sensor.getType() == Sensor.TYPE_ORIENTATION) {
 			DatePicker datePicker = new DatePicker();
 
@@ -288,7 +281,7 @@ public class OurSensorLog extends BaseSensorLog {
 			data.saveTofile();
 
 		}
-		
+
 		if (event.sensor.getType() == Sensor.TYPE_PRESSURE) {
 			DatePicker datePicker = new DatePicker();
 
@@ -303,25 +296,38 @@ public class OurSensorLog extends BaseSensorLog {
 
 		}
 
-		// final int vCount = event.values.length;
-		// final float[] values = event.values;
+		if (event.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
+			DatePicker datePicker = new DatePicker();
+			float x = event.values[0];
+			float y = event.values[1];
+			float z = event.values[2];
 
-		// write the first sensor value
-		// if (vCount > 0) {
-		// out.print(values[0]);
-		// }
+			File file = new File(path.getAbsolutePath() + "/"
+					+ getSensorNameForFile(Sensor.TYPE_GYROSCOPE)
+					+ Constants.EXTENSION);
 
-		// write the rest of the sensor values, space-separated
-		// for (int i = 1; i < vCount; ++i) {
-		// out.print(" ");
-		// out.print(values[i]);
-		// }
+			MeasuringPoint data = new GyroscopeMeasuringPoint(location,
+					orientation, file, datePicker, x, y, z);
+			measuringPoints.add(data);
+			data.saveTofile();
+		}
 
-		// Now print out the accuracy
-		// out.print(" ");
-		// out.print(event.accuracy);
+		if (event.sensor.getType() == Sensor.TYPE_GRAVITY) {
+			DatePicker datePicker = new DatePicker();
+			float x = event.values[0];
+			float y = event.values[1];
+			float z = event.values[2];
 
-		// finishLogLine();
+			File file = new File(path.getAbsolutePath() + "/"
+					+ getSensorNameForFile(Sensor.TYPE_GYROSCOPE)
+					+ Constants.EXTENSION);
+
+			MeasuringPoint data = new GravityMeasuringPoint(location,
+					orientation, file, datePicker, x, y, z);
+			measuringPoints.add(data);
+			data.saveTofile();
+		}
+		
 	}
 
 	@Override
@@ -330,7 +336,7 @@ public class OurSensorLog extends BaseSensorLog {
 		for (ScanResult sr : scans) {
 			if (shouldLog(sr)) {
 				DatePicker datePicker = new DatePicker();
-				
+
 				String SSID = sr.SSID;
 				String BSSID = sr.BSSID;
 				int frequency = sr.frequency;
@@ -482,6 +488,8 @@ public class OurSensorLog extends BaseSensorLog {
 			return "linaccel";
 		case Sensor.TYPE_PRESSURE:
 			return "barometer";
+		case Sensor.TYPE_GRAVITY:
+			return "gravity";
 		}
 		return "unknown";
 	}

@@ -12,7 +12,6 @@ public class PressureMeasuringPoint extends MeasuringPoint {
 			+ Constants.SEPERATOR + "date" + Constants.SEPERATOR + "time"
 			+ Constants.SEPERATOR + "Pressure (hPa / millibar)" 
 			+ Constants.NEWLINE;
-	
 	private float pressure;
 	
 	
@@ -38,10 +37,6 @@ public class PressureMeasuringPoint extends MeasuringPoint {
 				+ Constants.NEWLINE;
 		writableData = writableData.replace(".", ",");
 		return writableData;
-	}
-
-	public String getHEADLINE() {
-		return HEADLINE;
 	}
 
 	public float getPressure() {

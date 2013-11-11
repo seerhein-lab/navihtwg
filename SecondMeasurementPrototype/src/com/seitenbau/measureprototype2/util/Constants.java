@@ -21,6 +21,8 @@ public class Constants {
 	
 	// TAG for the WifiActivity
 	public static final String TAG_WIFI = "WifiActivity";
+	
+	public static final String TAG_OURSENSORLOG = "OurSensorLog";
 
 	// Path for collected sensor data (measuring points)
 	public static final String ABSOLUTE_PATH = new File(Environment.getExternalStorageDirectory()
