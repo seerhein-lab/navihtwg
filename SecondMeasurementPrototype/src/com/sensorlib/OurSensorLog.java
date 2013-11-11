@@ -37,6 +37,8 @@ import java.util.Set;
 import com.seitenbau.measureprototype2.data.LocationMeasuringPoint;
 import com.seitenbau.measureprototype2.data.MagneticMeasuringPoint;
 import com.seitenbau.measureprototype2.data.MeasuringPoint;
+import com.seitenbau.measureprototype2.data.OrientationMeasuringPoint;
+import com.seitenbau.measureprototype2.data.PressureMeasuringPoint;
 import com.seitenbau.measureprototype2.data.WifiMeasuringPoint;
 import com.seitenbau.measureprototype2.util.Constants;
 import com.seitenbau.measureprototype2.util.DatePicker;
@@ -266,6 +268,36 @@ public class OurSensorLog extends BaseSensorLog {
 					+ Constants.EXTENSION);
 			MeasuringPoint data = new MagneticMeasuringPoint(location,
 					orientation, file, datePicker, x, y, z);
+			measuringPoints.add(data);
+			data.saveTofile();
+
+		}
+		
+		if (event.sensor.getType() == Sensor.TYPE_ORIENTATION) {
+			DatePicker datePicker = new DatePicker();
+
+			float azimuth_z = event.values[0];
+			float pitch_x = event.values[1];
+			float roll_y = event.values[2];
+			File file = new File(path.getAbsolutePath() + "/"
+					+ getSensorNameForFile(Sensor.TYPE_ORIENTATION)
+					+ Constants.EXTENSION);
+			MeasuringPoint data = new OrientationMeasuringPoint(location,
+					orientation, file, datePicker, azimuth_z, pitch_x, roll_y);
+			measuringPoints.add(data);
+			data.saveTofile();
+
+		}
+		
+		if (event.sensor.getType() == Sensor.TYPE_PRESSURE) {
+			DatePicker datePicker = new DatePicker();
+
+			float pressure = event.values[0];
+			File file = new File(path.getAbsolutePath() + "/"
+					+ getSensorNameForFile(Sensor.TYPE_PRESSURE)
+					+ Constants.EXTENSION);
+			MeasuringPoint data = new PressureMeasuringPoint(location,
+					orientation, file, datePicker, pressure);
 			measuringPoints.add(data);
 			data.saveTofile();
 

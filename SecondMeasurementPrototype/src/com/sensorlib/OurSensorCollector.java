@@ -378,6 +378,7 @@ public class OurSensorCollector implements SensorEventListener, Closeable,
 		sensors.addAll(sensorManager.getSensorList(Sensor.TYPE_ACCELEROMETER));
 		sensors.addAll(sensorManager.getSensorList(Sensor.TYPE_MAGNETIC_FIELD));
 		sensors.addAll(sensorManager.getSensorList(Sensor.TYPE_ORIENTATION));
+		sensors.addAll(sensorManager.getSensorList(Sensor.TYPE_PRESSURE));
 		// Fudge factor to get this to compile under Froyo, while
 		// still allowing for us to take advantage of Gingerbread.
 		// Investigation of froyo source indicates that this doesn't cause a
