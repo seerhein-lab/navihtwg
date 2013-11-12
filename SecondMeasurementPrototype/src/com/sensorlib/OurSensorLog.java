@@ -15,11 +15,17 @@ package com.sensorlib;
  */
 // Copyright 2011 Google Inc. All Rights Reserved.
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import android.content.Context;
@@ -50,7 +56,7 @@ import com.seitenbau.measureprototype2.util.MeasuringPosition;
 
 public class OurSensorLog extends BaseSensorLog {
 
-	private List<MeasuringPoint> measuringPoints = new LinkedList<MeasuringPoint>();
+	private Map<String, List<MeasuringPoint>> measuringPointsMap = new HashMap<String, List<MeasuringPoint>>();
 
 	// We've been asked not to log SSIDs, but this log file format asks for
 	// them.
@@ -168,10 +174,68 @@ public class OurSensorLog extends BaseSensorLog {
 
 	@Override
 	public void close() {
-		// if (out != null) {
-		// out.close();
-		// }
-		// out = null;
+		if (measuringPointsMap != null && measuringPointsMap.size() > 0) {
+			Set<String> keySet = measuringPointsMap.keySet();
+			for (String key : keySet) {
+				List<MeasuringPoint> measuringPointsList = measuringPointsMap
+						.get(key);
+				saveMeasuringPointListTofile(measuringPointsList);
+			}
+		}
+	}
+
+	public void saveMeasuringPointListTofile(
+			List<MeasuringPoint> measuringPointsList) {
+		if (measuringPointsList != null && measuringPointsList.size() > 0) {
+
+			MeasuringPoint firstMeasuringPoint = measuringPointsList.get(0);
+			File file = firstMeasuringPoint.getFile();
+
+			BufferedWriter writer = null;
+			if (!file.exists()) {
+				try {
+					// create subdirectories if necessary
+					File parent = file.getParentFile();
+					if (!parent.exists() && !parent.mkdirs()) {
+						throw new IllegalStateException("Couldn't create dir: "
+								+ parent);
+					}
+					file.createNewFile();
+					writer = new BufferedWriter(new FileWriter(file));
+					writer.write(firstMeasuringPoint.getHeadline());
+					writer.write(firstMeasuringPoint.getWritableData());
+					writer.flush();
+				} catch (IOException e) {
+					Log.e(Constants.TAG_WIFI, "Fehler beim anlegen der Datei");
+				} finally {
+					try {
+						writer.close();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			} else {
+				try {
+
+					writer = new BufferedWriter(new FileWriter(file, true));
+					for (MeasuringPoint measuringPoint : measuringPointsList) {
+						writer.write(measuringPoint.getWritableData());
+					}
+					writer.flush();
+				} catch (IOException e) {
+					Log.e(Constants.TAG_WIFI,
+							"Fehler beim einfuegen in vorhandene Datei");
+				} finally {
+					try {
+						writer.close();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+		}
 	}
 
 	@Override
@@ -189,13 +253,13 @@ public class OurSensorLog extends BaseSensorLog {
 		double longitude = loc.getLongitude();
 		double altitude = loc.getAltitude();
 		float accuracy = loc.getAccuracy();
-		File file = new File(path.getAbsolutePath() + "/network_position"
+		String type = "network_position";
+		File file = new File(path.getAbsolutePath() + "/" + type
 				+ Constants.EXTENSION);
 
 		MeasuringPoint data = new LocationMeasuringPoint(location, orientation,
 				file, datePicker, latitude, longitude, altitude, accuracy);
-		measuringPoints.add(data);
-		data.saveTofile();
+		addMeasuringPoint(type, data);
 
 		// save the files in the base directory as well (all the location in the
 		// same file)
@@ -204,7 +268,16 @@ public class OurSensorLog extends BaseSensorLog {
 		MeasuringPoint sameData = new LocationMeasuringPoint(location,
 				orientation, baseFile, datePicker, latitude, longitude,
 				altitude, accuracy);
-		sameData.saveTofile();
+		//sameData.saveTofile();
+	}
+
+	private void addMeasuringPoint(String type, MeasuringPoint data) {
+		if (measuringPointsMap.get(type) == null) {
+			measuringPointsMap.put(type, new ArrayList<MeasuringPoint>());
+		}
+		List<MeasuringPoint> measuringPointsList = measuringPointsMap.get(type);
+		measuringPointsList.add(data);
+		measuringPointsMap.put(type, measuringPointsList);
 	}
 
 	@Override
@@ -246,70 +319,84 @@ public class OurSensorLog extends BaseSensorLog {
 		// toFileString(note));
 	}
 
+	
+	
+	private int gyroCount = 0;
+	private int magneticCount = 0;
+	private int orientationCount = 0;
+	
+	
 	@Override
 	protected synchronized void logSensorEvent(long absoluteTimeNanos,
 			SensorEvent event) {
-		Log.e(Constants.TAG_OURSENSORLOG, "magnetic field");
-		if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
-			DatePicker datePicker = new DatePicker();
 
-			float x = event.values[0];
-			float y = event.values[1];
-			float z = event.values[2];
-			File file = new File(path.getAbsolutePath() + "/"
-					+ getSensorNameForFile(Sensor.TYPE_MAGNETIC_FIELD)
-					+ Constants.EXTENSION);
-			MeasuringPoint data = new MagneticMeasuringPoint(location,
-					orientation, file, datePicker, x, y, z);
-			measuringPoints.add(data);
-			data.saveTofile();
+		if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
+			magneticCount++;
+			if (magneticCount % 10 == 0) {
+				DatePicker datePicker = new DatePicker();
+
+				float x = event.values[0];
+				float y = event.values[1];
+				float z = event.values[2];
+				String type = getSensorNameForFile(Sensor.TYPE_MAGNETIC_FIELD);
+				File file = new File(path.getAbsolutePath() + "/" + type
+						+ Constants.EXTENSION);
+				MeasuringPoint data = new MagneticMeasuringPoint(location,
+						orientation, file, datePicker, x, y, z);
+				addMeasuringPoint(type, data);
+			}
 
 		}
 
 		if (event.sensor.getType() == Sensor.TYPE_ORIENTATION) {
-			DatePicker datePicker = new DatePicker();
+			orientationCount++;
+			if (orientationCount % 5 == 0) {
+				DatePicker datePicker = new DatePicker();
+	
+				float azimuth_z = event.values[0];
+				float pitch_x = event.values[1];
+				float roll_y = event.values[2];
+				String type = getSensorNameForFile(Sensor.TYPE_ORIENTATION);
+				File file = new File(path.getAbsolutePath() + "/" + type
+						+ Constants.EXTENSION);
+				MeasuringPoint data = new OrientationMeasuringPoint(location,
+						orientation, file, datePicker, azimuth_z, pitch_x, roll_y);
+	
+				addMeasuringPoint(type, data);
+			}
 
-			float azimuth_z = event.values[0];
-			float pitch_x = event.values[1];
-			float roll_y = event.values[2];
-			File file = new File(path.getAbsolutePath() + "/"
-					+ getSensorNameForFile(Sensor.TYPE_ORIENTATION)
-					+ Constants.EXTENSION);
-			MeasuringPoint data = new OrientationMeasuringPoint(location,
-					orientation, file, datePicker, azimuth_z, pitch_x, roll_y);
-			measuringPoints.add(data);
-			data.saveTofile();
-
-		}
-
+		 }
+		
 		if (event.sensor.getType() == Sensor.TYPE_PRESSURE) {
 			DatePicker datePicker = new DatePicker();
 
 			float pressure = event.values[0];
-			File file = new File(path.getAbsolutePath() + "/"
-					+ getSensorNameForFile(Sensor.TYPE_PRESSURE)
+			String type = getSensorNameForFile(Sensor.TYPE_PRESSURE);
+
+			File file = new File(path.getAbsolutePath() + "/" + type
 					+ Constants.EXTENSION);
 			MeasuringPoint data = new PressureMeasuringPoint(location,
 					orientation, file, datePicker, pressure);
-			measuringPoints.add(data);
-			data.saveTofile();
+			addMeasuringPoint(type, data);
 
 		}
 
 		if (event.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
-			DatePicker datePicker = new DatePicker();
-			float x = event.values[0];
-			float y = event.values[1];
-			float z = event.values[2];
-
-			File file = new File(path.getAbsolutePath() + "/"
-					+ getSensorNameForFile(Sensor.TYPE_GYROSCOPE)
-					+ Constants.EXTENSION);
-
-			MeasuringPoint data = new GyroscopeMeasuringPoint(location,
-					orientation, file, datePicker, x, y, z);
-			measuringPoints.add(data);
-			data.saveTofile();
+			gyroCount++;
+			if (gyroCount%50==0){
+				DatePicker datePicker = new DatePicker();
+				float x = event.values[0];
+				float y = event.values[1];
+				float z = event.values[2];
+				String type = getSensorNameForFile(Sensor.TYPE_GYROSCOPE);
+	
+				File file = new File(path.getAbsolutePath() + "/" + type
+						+ Constants.EXTENSION);
+	
+				MeasuringPoint data = new GyroscopeMeasuringPoint(location,
+						orientation, file, datePicker, x, y, z);
+				addMeasuringPoint(type, data);
+			}
 		}
 
 		if (event.sensor.getType() == Sensor.TYPE_GRAVITY) {
@@ -317,17 +404,16 @@ public class OurSensorLog extends BaseSensorLog {
 			float x = event.values[0];
 			float y = event.values[1];
 			float z = event.values[2];
+			String type = getSensorNameForFile(Sensor.TYPE_GRAVITY);
 
-			File file = new File(path.getAbsolutePath() + "/"
-					+ getSensorNameForFile(Sensor.TYPE_GYROSCOPE)
+			File file = new File(path.getAbsolutePath() + "/" + type
 					+ Constants.EXTENSION);
 
 			MeasuringPoint data = new GravityMeasuringPoint(location,
 					orientation, file, datePicker, x, y, z);
-			measuringPoints.add(data);
-			data.saveTofile();
+			addMeasuringPoint(type, data);
 		}
-		
+
 	}
 
 	@Override
@@ -347,8 +433,8 @@ public class OurSensorLog extends BaseSensorLog {
 				MeasuringPoint data = new WifiMeasuringPoint(location,
 						orientation, file, datePicker, SSID, BSSID, frequency,
 						level);
-				measuringPoints.add(data);
-				data.saveTofile();
+				addMeasuringPoint(Constants.WIFIFILE, data);
+
 			}
 		}
 

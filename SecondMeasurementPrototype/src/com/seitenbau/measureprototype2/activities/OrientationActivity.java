@@ -75,7 +75,16 @@ public class OrientationActivity extends Activity {
 						
 //						sensorCollector = new SensorCollector(getApplicationContext(), new File(Constants.ABSOLUTE_PATH + "/sensors.txt"));
 						
-						sensorCollector.start();
+						final Runnable startCollectingDataRunnable = new Runnable() {
+							@Override
+							public void run() {
+								sensorCollector.start();
+							}
+						};
+						startCollectingDataRunnable.run();
+						
+						
+					
 						b.setText("collecting");
 						final Timer timer = new Timer();
 				        final Handler handler = new Handler();
@@ -102,7 +111,7 @@ public class OrientationActivity extends Activity {
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
-						Toast.makeText(getApplicationContext(), "ErroR",
+						Toast.makeText(getApplicationContext(), "Error",
 								Toast.LENGTH_SHORT).show();
 					} 
 

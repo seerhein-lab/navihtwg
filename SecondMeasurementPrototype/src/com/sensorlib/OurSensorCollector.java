@@ -254,7 +254,7 @@ public class OurSensorCollector implements SensorEventListener, Closeable,
 				}
 			} else {
 				sensorManager.registerListener(this, s,
-						SensorManager.SENSOR_DELAY_FASTEST);
+						SensorManager.SENSOR_DELAY_UI);
 						Log.d(TAG, s.getName());
 			}
 		}
@@ -309,7 +309,7 @@ public class OurSensorCollector implements SensorEventListener, Closeable,
 		if (isCollecting) {
 			log.logSensorEvent(event);
 		}
-		Log.e(TAG, "onSensorChanged");
+		//Log.e(TAG, "onSensorChanged");
 	}
 
 	/**
