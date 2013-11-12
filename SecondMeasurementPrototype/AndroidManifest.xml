@@ -18,7 +18,8 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
-    
+      <!-- Permission to the World Weather Online service -->
+     <uses-permission android:name="android.permission.INTERNET" />
     
     
     

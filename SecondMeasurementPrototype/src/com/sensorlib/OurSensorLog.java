@@ -44,6 +44,7 @@ import com.seitenbau.measureprototype2.data.MeasuringPoint;
 import com.seitenbau.measureprototype2.data.OrientationMeasuringPoint;
 import com.seitenbau.measureprototype2.data.PressureMeasuringPoint;
 import com.seitenbau.measureprototype2.data.WifiMeasuringPoint;
+import com.seitenbau.measureprototype2.services.WeatherDataService;
 import com.seitenbau.measureprototype2.util.Constants;
 import com.seitenbau.measureprototype2.util.DatePicker;
 import com.seitenbau.measureprototype2.util.MeasuringPosition;
@@ -371,14 +372,15 @@ public class OurSensorLog extends BaseSensorLog {
 			DatePicker datePicker = new DatePicker();
 
 			float pressure = event.values[0];
+			Float wwoPressure = WeatherDataService.getInstance().getAirPressure();
+			
 			String type = getSensorNameForFile(Sensor.TYPE_PRESSURE);
 
 			File file = new File(path.getAbsolutePath() + "/" + type
 					+ Constants.EXTENSION);
 			MeasuringPoint data = new PressureMeasuringPoint(location,
-					orientation, file, datePicker, pressure);
+					orientation, file, datePicker, pressure, wwoPressure);
 			addMeasuringPoint(type, data);
-
 		}
 
 		if (event.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
