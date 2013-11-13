@@ -105,7 +105,8 @@ public class OrientationActivity extends Activity {
 		
 				        timer.schedule(task, 2000); 
 						
-						
+				        Toast.makeText(getApplicationContext(), "Messung gespeichert",
+								Toast.LENGTH_SHORT).show();
 						b.setVisibility(View.GONE);
 
 					} catch (IOException e) {
