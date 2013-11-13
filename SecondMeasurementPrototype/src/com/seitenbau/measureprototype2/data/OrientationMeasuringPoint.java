@@ -11,8 +11,7 @@ public class OrientationMeasuringPoint extends MeasuringPoint {
 	private final String HEADLINE = "location" + Constants.SEPERATOR + "orientation"
 			+ Constants.SEPERATOR + "date" + Constants.SEPERATOR + "time"
 			+ Constants.SEPERATOR + "Azimuth (Z) deg" + Constants.SEPERATOR + "Pitch (X) deg"
-			+ Constants.SEPERATOR + "Roll (Y) deg" + Constants.SEPERATOR
-			+ "magnetic field strength" + Constants.NEWLINE;
+			+ Constants.SEPERATOR + "Roll (Y) deg" + Constants.NEWLINE;
 	
 	private float azimuth_z;
 	private float pitch_x;
