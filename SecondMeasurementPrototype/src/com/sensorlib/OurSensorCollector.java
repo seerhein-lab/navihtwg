@@ -92,7 +92,6 @@ public class OurSensorCollector implements SensorEventListener, Closeable,
 			String orientation, MeasuringPosition location) throws IOException {
 		this(context, new OurSensorLog(context, sensorLogPath, orientation,
 				location));
-		Log.e("Error", "baaaM");
 
 	}
 

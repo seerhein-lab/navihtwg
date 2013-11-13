@@ -132,7 +132,8 @@ public class OurSensorLog extends BaseSensorLog {
 			MeasuringPosition loc) {
 		this.ctx = ctx;
 		this.basePath = basePath;
-		this.path = new File(basePath, "M" + loc.getID() + "/");
+		this.path = new File(basePath, "M" + loc.getID() + " " + loc.getDesc()
+				+ "/");
 		this.orientation = orientation;
 		this.location = loc;
 
@@ -269,7 +270,7 @@ public class OurSensorLog extends BaseSensorLog {
 		MeasuringPoint sameData = new LocationMeasuringPoint(location,
 				orientation, baseFile, datePicker, latitude, longitude,
 				altitude, accuracy);
-		//sameData.saveTofile();
+		// sameData.saveTofile();
 	}
 
 	private void addMeasuringPoint(String type, MeasuringPoint data) {
@@ -320,13 +321,10 @@ public class OurSensorLog extends BaseSensorLog {
 		// toFileString(note));
 	}
 
-	
-	
 	private int gyroCount = 0;
 	private int magneticCount = 0;
 	private int orientationCount = 0;
-	
-	
+
 	@Override
 	protected synchronized void logSensorEvent(long absoluteTimeNanos,
 			SensorEvent event) {
@@ -353,7 +351,7 @@ public class OurSensorLog extends BaseSensorLog {
 			orientationCount++;
 			if (orientationCount % 5 == 0) {
 				DatePicker datePicker = new DatePicker();
-	
+
 				float azimuth_z = event.values[0];
 				float pitch_x = event.values[1];
 				float roll_y = event.values[2];
@@ -361,19 +359,21 @@ public class OurSensorLog extends BaseSensorLog {
 				File file = new File(path.getAbsolutePath() + "/" + type
 						+ Constants.EXTENSION);
 				MeasuringPoint data = new OrientationMeasuringPoint(location,
-						orientation, file, datePicker, azimuth_z, pitch_x, roll_y);
-	
+						orientation, file, datePicker, azimuth_z, pitch_x,
+						roll_y);
+
 				addMeasuringPoint(type, data);
 			}
 
-		 }
-		
+		}
+
 		if (event.sensor.getType() == Sensor.TYPE_PRESSURE) {
 			DatePicker datePicker = new DatePicker();
 
 			float pressure = event.values[0];
-			Float wwoPressure = WeatherDataService.getInstance().getAirPressure();
-			
+			Float wwoPressure = WeatherDataService.getInstance()
+					.getAirPressure();
+
 			String type = getSensorNameForFile(Sensor.TYPE_PRESSURE);
 
 			File file = new File(path.getAbsolutePath() + "/" + type
@@ -385,16 +385,16 @@ public class OurSensorLog extends BaseSensorLog {
 
 		if (event.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
 			gyroCount++;
-			if (gyroCount%50==0){
+			if (gyroCount % 50 == 0) {
 				DatePicker datePicker = new DatePicker();
 				float x = event.values[0];
 				float y = event.values[1];
 				float z = event.values[2];
 				String type = getSensorNameForFile(Sensor.TYPE_GYROSCOPE);
-	
+
 				File file = new File(path.getAbsolutePath() + "/" + type
 						+ Constants.EXTENSION);
-	
+
 				MeasuringPoint data = new GyroscopeMeasuringPoint(location,
 						orientation, file, datePicker, x, y, z);
 				addMeasuringPoint(type, data);
