@@ -414,7 +414,7 @@ public class OurSensorLog extends BaseSensorLog {
 					+ Constants.EXTENSION);
 
 			MeasuringPoint data = new GravityMeasuringPoint(location,
-					orientation, file, datePicker, x, y, z);
+					orientation, file, datePicker, x, y, z, getDeviceInfo());
 			addMeasuringPoint(type, data);
 		}
 

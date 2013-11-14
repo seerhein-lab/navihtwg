@@ -10,20 +10,24 @@ public class GravityMeasuringPoint extends MeasuringPoint {
 
 	private final String HEADLINE = "location" + Constants.SEPERATOR
 			+ "orientation" + Constants.SEPERATOR + "date"
-			+ Constants.SEPERATOR + "time" + Constants.SEPERATOR + "x (m/s^2)"
+			+ Constants.SEPERATOR + "time" + Constants.SEPERATOR
+			+ "device name" + Constants.SEPERATOR + "device id"
+			+ Constants.SEPERATOR + Constants.SEPERATOR + "x (m/s^2)"
 			+ Constants.SEPERATOR + "y  (m/s^2)" + Constants.SEPERATOR
 			+ "z  (m/s^2)" + Constants.NEWLINE;
 	private float x;
 	private float y;
 	private float z;
+	private String device;
 
 	public GravityMeasuringPoint(MeasuringPosition location,
 			String orientation, File file, DatePicker date, float x, float y,
-			float z) {
+			float z, String device) {
 		super(location, orientation, file, date);
 		this.x = x;
 		this.y = y;
 		this.z = z;
+		this.device = device;
 	}
 
 	@Override
@@ -36,9 +40,10 @@ public class GravityMeasuringPoint extends MeasuringPoint {
 		String writableData = getLocation().getID() + Constants.SEPERATOR
 				+ getOrientation() + Constants.SEPERATOR + getDate()
 				+ Constants.SEPERATOR + getTime() + Constants.SEPERATOR
-				+ Float.toString(getX()) + Constants.SEPERATOR
-				+ Float.toString(getY()) + Constants.SEPERATOR
-				+ Float.toString(getZ()) + Constants.NEWLINE;
+				+ device + Constants.SEPERATOR + Float.toString(getX())
+				+ Constants.SEPERATOR + Float.toString(getY())
+				+ Constants.SEPERATOR + Float.toString(getZ())
+				+ Constants.NEWLINE;
 		writableData = writableData.replace(".", ",");
 		return writableData;
 

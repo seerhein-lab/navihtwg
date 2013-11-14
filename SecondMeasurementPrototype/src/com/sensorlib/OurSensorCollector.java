@@ -383,6 +383,7 @@ public class OurSensorCollector implements SensorEventListener, Closeable,
 		// Investigation of froyo source indicates that this doesn't cause a
 		// crash or an exception to be thrown.
 		sensors.addAll(sensorManager.getSensorList(SENSOR_LINEAR_ACCELERATION));
+		sensors.addAll(sensorManager.getSensorList(Sensor.TYPE_GRAVITY));
 		return sensors;
 	}
 
