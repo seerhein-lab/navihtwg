@@ -36,6 +36,7 @@ import android.telephony.NeighboringCellInfo;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
+import com.seitenbau.measureprototype2.data.AccelerometerMeasuringPoint;
 import com.seitenbau.measureprototype2.data.GravityMeasuringPoint;
 import com.seitenbau.measureprototype2.data.GyroscopeMeasuringPoint;
 import com.seitenbau.measureprototype2.data.LocationMeasuringPoint;
@@ -414,6 +415,21 @@ public class OurSensorLog extends BaseSensorLog {
 					+ Constants.EXTENSION);
 
 			MeasuringPoint data = new GravityMeasuringPoint(location,
+					orientation, file, datePicker, x, y, z, getDeviceInfo());
+			addMeasuringPoint(type, data);
+		}
+		
+		if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+			DatePicker datePicker = new DatePicker();
+			float x = event.values[0];
+			float y = event.values[1];
+			float z = event.values[2];
+			String type = getSensorNameForFile(Sensor.TYPE_ACCELEROMETER);
+
+			File file = new File(path.getAbsolutePath() + "/" + type
+					+ Constants.EXTENSION);
+
+			MeasuringPoint data = new AccelerometerMeasuringPoint(location,
 					orientation, file, datePicker, x, y, z, getDeviceInfo());
 			addMeasuringPoint(type, data);
 		}
