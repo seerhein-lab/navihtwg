@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -34,6 +33,7 @@ import android.hardware.SensorEvent;
 import android.location.Location;
 import android.net.wifi.ScanResult;
 import android.telephony.NeighboringCellInfo;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.seitenbau.measureprototype2.data.GravityMeasuringPoint;
@@ -159,14 +159,15 @@ public class OurSensorLog extends BaseSensorLog {
 	}
 
 	private String getDeviceInfo() {
+		TelephonyManager tm = (TelephonyManager) ctx
+				.getSystemService(Context.TELEPHONY_SERVICE);
+		String IMEI = tm.getDeviceId();
+		IMEI = IMEI.substring(0, 7);
+
 		StringBuilder builder = new StringBuilder();
-		builder.append("Board: ").append(android.os.Build.BOARD);
-		builder.append(" Brand: ").append(android.os.Build.BRAND);
-		builder.append(" Device: ").append(android.os.Build.DEVICE);
-		builder.append(" Hardware: ").append(android.os.Build.HARDWARE);
-		builder.append(" Manufacturer: ").append(android.os.Build.MANUFACTURER);
-		builder.append(" Model: ").append(android.os.Build.MODEL);
-		builder.append(" Product: ").append(android.os.Build.PRODUCT);
+		builder.append(android.os.Build.MODEL);
+		builder.append(";");
+		builder.append(IMEI);
 		return builder.toString();
 	}
 
@@ -260,7 +261,7 @@ public class OurSensorLog extends BaseSensorLog {
 				+ Constants.EXTENSION);
 
 		MeasuringPoint data = new LocationMeasuringPoint(location, orientation,
-				file, datePicker, latitude, longitude, altitude, accuracy);
+				file, datePicker, latitude, longitude, altitude, accuracy, getDeviceInfo());
 		addMeasuringPoint(type, data);
 
 		// save the files in the base directory as well (all the location in the
@@ -269,7 +270,7 @@ public class OurSensorLog extends BaseSensorLog {
 				+ Constants.EXTENSION);
 		MeasuringPoint sameData = new LocationMeasuringPoint(location,
 				orientation, baseFile, datePicker, latitude, longitude,
-				altitude, accuracy);
+				altitude, accuracy, getDeviceInfo());
 		// sameData.saveTofile();
 	}
 
@@ -341,7 +342,7 @@ public class OurSensorLog extends BaseSensorLog {
 				File file = new File(path.getAbsolutePath() + "/" + type
 						+ Constants.EXTENSION);
 				MeasuringPoint data = new MagneticMeasuringPoint(location,
-						orientation, file, datePicker, x, y, z);
+						orientation, file, datePicker, x, y, z, getDeviceInfo());
 				addMeasuringPoint(type, data);
 			}
 
@@ -360,7 +361,7 @@ public class OurSensorLog extends BaseSensorLog {
 						+ Constants.EXTENSION);
 				MeasuringPoint data = new OrientationMeasuringPoint(location,
 						orientation, file, datePicker, azimuth_z, pitch_x,
-						roll_y);
+						roll_y, getDeviceInfo());
 
 				addMeasuringPoint(type, data);
 			}
@@ -379,7 +380,8 @@ public class OurSensorLog extends BaseSensorLog {
 			File file = new File(path.getAbsolutePath() + "/" + type
 					+ Constants.EXTENSION);
 			MeasuringPoint data = new PressureMeasuringPoint(location,
-					orientation, file, datePicker, pressure, wwoPressure);
+					orientation, file, datePicker, pressure, wwoPressure,
+					getDeviceInfo());
 			addMeasuringPoint(type, data);
 		}
 
@@ -396,7 +398,7 @@ public class OurSensorLog extends BaseSensorLog {
 						+ Constants.EXTENSION);
 
 				MeasuringPoint data = new GyroscopeMeasuringPoint(location,
-						orientation, file, datePicker, x, y, z);
+						orientation, file, datePicker, x, y, z, getDeviceInfo());
 				addMeasuringPoint(type, data);
 			}
 		}
@@ -434,7 +436,7 @@ public class OurSensorLog extends BaseSensorLog {
 						+ Constants.WIFIFILE + Constants.EXTENSION);
 				MeasuringPoint data = new WifiMeasuringPoint(location,
 						orientation, file, datePicker, SSID, BSSID, frequency,
-						level);
+						level, getDeviceInfo());
 				addMeasuringPoint(Constants.WIFIFILE, data);
 
 			}

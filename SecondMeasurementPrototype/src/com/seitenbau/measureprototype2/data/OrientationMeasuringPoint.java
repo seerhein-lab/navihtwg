@@ -8,25 +8,27 @@ import com.seitenbau.measureprototype2.util.MeasuringPosition;
 
 public class OrientationMeasuringPoint extends MeasuringPoint {
 
-	private final String HEADLINE = "location" + Constants.SEPERATOR + "orientation"
-			+ Constants.SEPERATOR + "date" + Constants.SEPERATOR + "time"
-			+ Constants.SEPERATOR + "Azimuth (Z) deg" + Constants.SEPERATOR + "Pitch (X) deg"
-			+ Constants.SEPERATOR + "Roll (Y) deg" + Constants.NEWLINE;
-	
+	private final String HEADLINE = "location" + Constants.SEPERATOR
+			+ "orientation" + Constants.SEPERATOR + "date"
+			+ Constants.SEPERATOR + "time" + Constants.SEPERATOR
+			+ "device name" + Constants.SEPERATOR + "device id"
+			+ Constants.SEPERATOR + "Azimuth (Z) deg" + Constants.SEPERATOR
+			+ "Pitch (X) deg" + Constants.SEPERATOR + "Roll (Y) deg"
+			+ Constants.NEWLINE;
+
 	private float azimuth_z;
 	private float pitch_x;
 	private float roll_y;
-	
-	
-
+	private String device;
 
 	public OrientationMeasuringPoint(MeasuringPosition location,
 			String orientation, File file, DatePicker date, float azimuth_z,
-			float pitch_x, float roll_y) {
+			float pitch_x, float roll_y, String device) {
 		super(location, orientation, file, date);
 		this.azimuth_z = azimuth_z;
 		this.pitch_x = pitch_x;
 		this.roll_y = roll_y;
+		this.device = device;
 	}
 
 	@Override
@@ -39,10 +41,10 @@ public class OrientationMeasuringPoint extends MeasuringPoint {
 		String writableData = getLocation().getID() + Constants.SEPERATOR
 				+ getOrientation() + Constants.SEPERATOR + getDate()
 				+ Constants.SEPERATOR + getTime() + Constants.SEPERATOR
-				+ Float.toString(getAzimuth_z()) + Constants.SEPERATOR
-				+ Float.toString(getPitch_x()) + Constants.SEPERATOR
-				+ Float.toString(getRoll_y()) + Constants.SEPERATOR
-				+ Constants.NEWLINE;
+				+ device + Constants.SEPERATOR + Float.toString(getAzimuth_z())
+				+ Constants.SEPERATOR + Float.toString(getPitch_x())
+				+ Constants.SEPERATOR + Float.toString(getRoll_y())
+				+ Constants.SEPERATOR + Constants.NEWLINE;
 		writableData = writableData.replace(".", ",");
 		return writableData;
 	}
@@ -58,7 +60,5 @@ public class OrientationMeasuringPoint extends MeasuringPoint {
 	public float getRoll_y() {
 		return roll_y;
 	}
-	
-	
 
 }
